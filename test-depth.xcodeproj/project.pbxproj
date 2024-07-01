@@ -11,6 +11,11 @@
 		8C47AD542C29A1EE00BDE987 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C47AD532C29A1EE00BDE987 /* ContentView.swift */; };
 		8C47AD562C29A1F200BDE987 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C47AD552C29A1F200BDE987 /* Assets.xcassets */; };
 		8C47AD592C29A1F200BDE987 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C47AD582C29A1F200BDE987 /* Preview Assets.xcassets */; };
+		8C47AD602C29A2B800BDE987 /* VideARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C47AD5F2C29A2B800BDE987 /* VideARView.swift */; };
+		8C47AD622C29AF7C00BDE987 /* UIImage+CVBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C47AD612C29AF7C00BDE987 /* UIImage+CVBuffer.swift */; };
+		8C52BF3A2C33049D00ABBD56 /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C52BF392C33049D00ABBD56 /* SpeechRecognizer.swift */; };
+		8CEDDF0E2C2C59E2003C1A41 /* HapticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEDDF0D2C2C59E2003C1A41 /* HapticsManager.swift */; };
+		8CEDDF102C2C5CCF003C1A41 /* YOLOv3 model.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 8CEDDF0F2C2C5CCF003C1A41 /* YOLOv3 model.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +24,11 @@
 		8C47AD532C29A1EE00BDE987 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		8C47AD552C29A1F200BDE987 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8C47AD582C29A1F200BDE987 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		8C47AD5F2C29A2B800BDE987 /* VideARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideARView.swift; sourceTree = "<group>"; };
+		8C47AD612C29AF7C00BDE987 /* UIImage+CVBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+CVBuffer.swift"; sourceTree = "<group>"; };
+		8C52BF392C33049D00ABBD56 /* SpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
+		8CEDDF0D2C2C59E2003C1A41 /* HapticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticsManager.swift; sourceTree = "<group>"; };
+		8CEDDF0F2C2C5CCF003C1A41 /* YOLOv3 model.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = "YOLOv3 model.mlmodel"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,8 +61,13 @@
 		8C47AD502C29A1EE00BDE987 /* test-depth */ = {
 			isa = PBXGroup;
 			children = (
+				8CEDDF0F2C2C5CCF003C1A41 /* YOLOv3 model.mlmodel */,
 				8C47AD512C29A1EE00BDE987 /* AppDelegate.swift */,
 				8C47AD532C29A1EE00BDE987 /* ContentView.swift */,
+				8C52BF392C33049D00ABBD56 /* SpeechRecognizer.swift */,
+				8C47AD5F2C29A2B800BDE987 /* VideARView.swift */,
+				8CEDDF0D2C2C59E2003C1A41 /* HapticsManager.swift */,
+				8C47AD612C29AF7C00BDE987 /* UIImage+CVBuffer.swift */,
 				8C47AD552C29A1F200BDE987 /* Assets.xcassets */,
 				8C47AD572C29A1F200BDE987 /* Preview Content */,
 			);
@@ -137,8 +152,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C52BF3A2C33049D00ABBD56 /* SpeechRecognizer.swift in Sources */,
+				8C47AD622C29AF7C00BDE987 /* UIImage+CVBuffer.swift in Sources */,
 				8C47AD542C29A1EE00BDE987 /* ContentView.swift in Sources */,
+				8C47AD602C29A2B800BDE987 /* VideARView.swift in Sources */,
+				8CEDDF0E2C2C59E2003C1A41 /* HapticsManager.swift in Sources */,
 				8C47AD522C29A1EE00BDE987 /* AppDelegate.swift in Sources */,
+				8CEDDF102C2C5CCF003C1A41 /* YOLOv3 model.mlmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,10 +292,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"test-depth/Preview Content\"";
-				DEVELOPMENT_TEAM = 95566VVRBB;
+				DEVELOPMENT_TEAM = CUA3BVMUR5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "to speech to text";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = NSPhotoLibraryAddUsageDescription;
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "to understand them";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arkit;
@@ -303,10 +326,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"test-depth/Preview Content\"";
-				DEVELOPMENT_TEAM = 95566VVRBB;
+				DEVELOPMENT_TEAM = CUA3BVMUR5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "to speech to text";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = NSPhotoLibraryAddUsageDescription;
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "to understand them";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arkit;
