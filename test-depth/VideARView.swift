@@ -151,9 +151,7 @@ class VideARView: ARView, ARSessionDelegate {
            let planeAnchor = rayFirstRes.anchor as? ARPlaneAnchor {
             
             // here’s a line connecting the two points, which might be useful for other things
-            let cameraToAnchor = cameraPosition - anchorPosition
-            // and here’s just the scalar distance
-            self.currentCentralDistance = length(cameraToAnchor)
+            
 //            let linearizedValue = (abs(Double(diffInRads(camPointObjRot.y, cameraCurrentRot.y))) + abs(Double(diffInRads(camPointObjRot.x, cameraCurrentRot.x)))).normalize(from: 0.0...(Double.pi + Double.pi/2), to: 0.0...1.0)
 //            self.hapticsManager.sendContinuousHaptic(value: normalizeValue(linearizedValue))
 //            print("Distance from raycast: \(distance)")
@@ -170,8 +168,9 @@ class VideARView: ARView, ARSessionDelegate {
                 let cameraToAnchor = cameraPosition - anchorPosition
                 
                 // Calculate the scalar distance
-                let distance = length(cameraToAnchor)
-                print("Distance from raycast: \(distance)")
+                self.currentCentralDistance = length(cameraToAnchor)
+                print("Distance from raycast: \(self.currentCentralDistance)")
+                // and here’s just the scalar distance
             }
         }
         
