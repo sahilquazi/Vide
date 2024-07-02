@@ -51,6 +51,7 @@ class VideARView: ARView, ARSessionDelegate {
     var lookingForObject: String? = "keyboard"
     var objectDetectionAnchor: AnchorEntity? = nil
     var textDisplayer: ((String) -> ())?
+    var currentCentralDistance: Float = 9999.9
     
     
     
@@ -149,6 +150,13 @@ class VideARView: ARView, ARSessionDelegate {
         if let rayFirstRes = ray.first,
            let planeAnchor = rayFirstRes.anchor as? ARPlaneAnchor {
             
+            // here’s a line connecting the two points, which might be useful for other things
+            let cameraToAnchor = cameraPosition - anchorPosition
+            // and here’s just the scalar distance
+            self.currentCentralDistance = length(cameraToAnchor)
+//            let linearizedValue = (abs(Double(diffInRads(camPointObjRot.y, cameraCurrentRot.y))) + abs(Double(diffInRads(camPointObjRot.x, cameraCurrentRot.x)))).normalize(from: 0.0...(Double.pi + Double.pi/2), to: 0.0...1.0)
+//            self.hapticsManager.sendContinuousHaptic(value: normalizeValue(linearizedValue))
+//            print("Distance from raycast: \(distance)")
             // Check if the plane is vertical and its extent is larger than 1 square meter
             let extent = planeAnchor.extent
             let area = extent.x * extent.y
@@ -167,6 +175,7 @@ class VideARView: ARView, ARSessionDelegate {
             }
         }
         
+                
         frameCounter += 1
     
         if frameCounter % 30 == 0 && lookingForObject != nil{
