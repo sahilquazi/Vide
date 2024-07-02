@@ -51,6 +51,7 @@ class VideARView: ARView, ARSessionDelegate {
     var lookingForObject: String? = "keyboard"
     var objectDetectionAnchor: AnchorEntity? = nil
     var textDisplayer: ((String) -> ())?
+    var currentCentralDistance: Float = 9999.9
     
     
     
@@ -152,9 +153,12 @@ class VideARView: ARView, ARSessionDelegate {
             // here’s a line connecting the two points, which might be useful for other things
             let cameraToAnchor = cameraPosition - anchorPosition
             // and here’s just the scalar distance
-            let distance = length(cameraToAnchor)
+            self.currentCentralDistance = length(cameraToAnchor)
+//            let linearizedValue = (abs(Double(diffInRads(camPointObjRot.y, cameraCurrentRot.y))) + abs(Double(diffInRads(camPointObjRot.x, cameraCurrentRot.x)))).normalize(from: 0.0...(Double.pi + Double.pi/2), to: 0.0...1.0)
+//            self.hapticsManager.sendContinuousHaptic(value: normalizeValue(linearizedValue))
 //            print("Distance from raycast: \(distance)")
         }
+        
                 
         frameCounter += 1
         
