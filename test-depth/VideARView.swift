@@ -142,22 +142,33 @@ class VideARView: ARView, ARSessionDelegate {
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         
-        let ray = self.raycast(from: CGPoint(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY), allowing: .existingPlaneInfinite, alignment: .any)
-        print("trying to ray: \((ray.first?.anchor as? ARPlaneAnchor)?.extent)")
-        if let rayFirstRes = ray.first {
-//            print("found anchor: \(rayAnchor)")
-            let anchorPosition = rayFirstRes.worldTransform.columns.3
-            let cameraPosition = self.cameraTransform.matrix.columns.3
-            
-            // here’s a line connecting the two points, which might be useful for other things
-            let cameraToAnchor = cameraPosition - anchorPosition
-            // and here’s just the scalar distance
-            let distance = length(cameraToAnchor)
-//            print("Distance from raycast: \(distance)")
-        }
-                
-        frameCounter += 1
+        // Perform a raycast from the center of the screen
+        let ray = self.raycast(from: CGPoint(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY), allowing: .existingPlaneInfinite, alignment: .vertical)
         
+        // Filter the raycast results
+        if let rayFirstRes = ray.first,
+           let planeAnchor = rayFirstRes.anchor as? ARPlaneAnchor {
+            
+            // Check if the plane is vertical and its extent is larger than 1 square meter
+            let extent = planeAnchor.extent
+            let area = extent.x * extent.y
+            if area > 1.0 {
+                print("Found suitable vertical plane: \(extent)")
+                
+                let anchorPosition = rayFirstRes.worldTransform.columns.3
+                let cameraPosition = self.cameraTransform.matrix.columns.3
+                
+                // Calculate the vector from the camera to the anchor
+                let cameraToAnchor = cameraPosition - anchorPosition
+                
+                // Calculate the scalar distance
+                let distance = length(cameraToAnchor)
+                print("Distance from raycast: \(distance)")
+            }
+        }
+        
+        frameCounter += 1
+    
         if frameCounter % 30 == 0 && lookingForObject != nil{
             if let sceneDepth = frame.sceneDepth {
 //                guard let uiimage = cvPixelBufferToUIImage(pixelBuffer: sceneDepth.depthMap) else {return}
