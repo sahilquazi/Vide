@@ -33,6 +33,8 @@ class SpeechRecognizer: ObservableObject {
     @Published var transcript: String = ""
     @Published var gptResponse: String = ""
     
+    var gotResponse: (String) -> ()
+    
     func askGPT(_ message: String) async -> String {
         print("Asking GPT")
         
@@ -184,6 +186,7 @@ class SpeechRecognizer: ObservableObject {
         DispatchQueue.main.async{
             Task {
                 self.gptResponse = await self.askGPT(self.transcript)
+                self.gotResponse(self.gptResponse)
                 self.reset()
             }
             
@@ -227,7 +230,8 @@ class SpeechRecognizer: ObservableObject {
     }
     
     
-    init() {
+    init(gotResponse: @escaping (String) -> ()) {
+        self.gotResponse = gotResponse
         recognizer = SFSpeechRecognizer()
         
         Task(priority: .background) {

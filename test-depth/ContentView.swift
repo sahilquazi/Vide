@@ -9,11 +9,16 @@ import SwiftUI
 import RealityKit
 import AVKit
 import Speech
+import Combine
 
 struct ContentView : View {
     @State var displayText = ""
-    @StateObject var speechRecognizer = SpeechRecognizer()
-
+    @StateObject private var speechRecognizer = SpeechRecognizer(gotResponse: {response in
+        print("sending notif look \(response)")
+        DispatchQueue.main.async {
+        NotificationCenter.default.post(name: Notification.Name.gotGPTODResponse, object: response)
+        }
+    })
     
     // keys,door,window,trash_can,light_bulb,phone,marker,charger
     func handleResponse(_ value: String) -> String {
@@ -176,12 +181,14 @@ struct ContentView : View {
                 return "❓" // Default emoji if no match is found
         }
     }
+    var didChange = PassthroughSubject<String, Never>()
+
     
     
     
     var body: some View {
         ZStack {
-            ARViewContainer(textDisplayer: {text in
+            ARViewContainer(didChange: didChange, speechRecognizer: speechRecognizer, textDisplayer: {text in
                 displayText = text
                 
             }).edgesIgnoringSafeArea(.all)
@@ -213,16 +220,47 @@ struct ContentView : View {
                 }
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.gotGPTODResponse), perform: {object in
+            
+            guard let response = object.object as? String else {
+                print("look got object: \(object)")
+                print("look error getting string from gotGPTODResponse")
+                return
+            }
+            print("look for object \(response.dropFirst())")
+            self.didChange.send(String(response.dropFirst()))
+        })
     }
+}
+
+extension Notification.Name {
+    static let gotGPTODResponse = Notification.Name("GotGPTODResponse")
 }
 
 struct ARViewContainer: UIViewRepresentable {
     
+    var didChange: PassthroughSubject<String, Never>
+    var speechRecognizer: SpeechRecognizer
+    @State var cancellable: AnyCancellable? = nil
+
     var textDisplayer: (String) -> ()
     
     func makeUIView(context: Context) -> ARView {
         
-        let view = VideARView(textDisplayer: textDisplayer)
+        let view = VideARView(textDisplayer: textDisplayer, speechRecognizer: speechRecognizer)
+        
+        DispatchQueue.main.async {
+            // very important to capture it as a variable, otherwise it'll be short lived.
+            self.cancellable = didChange.sink { (value) in
+                print("looking Received: \(value)")
+                
+                // here you can do a switch case to know which method to call
+                // on your UIKit class, example:
+                // call your function!
+                view.setObjectDetectionTarget(target: value)
+            }
+        }
+        
         return view
         
     }

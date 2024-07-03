@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import CoreHaptics
 import Combine
+import RealityKit
 
 class HapticsManager: ObservableObject {
     @Published var engine: CHHapticEngine?
@@ -18,11 +19,18 @@ class HapticsManager: ObservableObject {
     private let initialIntensity: Float = 1.0
     private let initialSharpness: Float = 0.1
     @Published private var engineNeedsStart = true
+    @Published var proximityWarningOn = false
     
     
     func startEngine() {
         createAndStartHapticEngine()
         createContinuousHapticPlayer()
+        
+        Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [self] _ in
+            if self.proximityWarningOn {
+                self.playTactileHaptic(hapticIntensity: 0.95, hapticSharpness: 0.7)
+            }
+        }
         
     }
 
@@ -147,19 +155,16 @@ class HapticsManager: ObservableObject {
     
     // MARK: Play haptics
     
-    func playTactileHaptic() {
+    func playTactileHaptic(hapticIntensity: Float = 0.5, hapticSharpness: Float = 0.5) {
         do {
             
-            let hapticDict = [
-                CHHapticPattern.Key.pattern: [
-                    [CHHapticPattern.Key.event: [
-                        CHHapticPattern.Key.eventType: CHHapticEvent.EventType.hapticTransient,
-                        CHHapticPattern.Key.time: CHHapticTimeImmediate,
-                        CHHapticPattern.Key.eventDuration: 1.0]
-                    ]
-                ]
-            ]
-            let pattern = try CHHapticPattern(dictionary: hapticDict)
+            let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: hapticIntensity)
+            let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: hapticSharpness)
+            let sustained = CHHapticEventParameter(parameterID: .sustained, value: 1.0)
+            
+            let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness, sustained], relativeTime: 0, duration: 0.5)
+            
+            let pattern = try CHHapticPattern(events: [event], parameters: [])
             let player = try engine?.makePlayer(with: pattern)
             
             engine?.notifyWhenPlayersFinished { error in
@@ -172,6 +177,10 @@ class HapticsManager: ObservableObject {
         } catch {
             print(error)
         }
+    }
+    
+    func playSingleProximityWarn() {
+        
     }
     
     func sendContinuousHaptic(value: Double) {
@@ -200,6 +209,117 @@ class HapticsManager: ObservableObject {
         
         
     }
+    
+    
 }
 
+extension vector_float3 {
+    
+    /// Returns the angle of a line defined by to points to a horizontal plane
+    ///
+    /// - Parameters:
+    ///   - p1: p1 (vertice)
+    ///   - p2: p2
+    /// - Returns: angle to a horizontal crossing p1 in radians
+    static func angleBetweenPointsToHorizontalPlane(p1:vector_float3, p2:vector_float3) -> Float {
+        
+        ///Point in 3d space on the same level of p1 but equal to p2
+        let p2Hor = vector_float3.init(p2.x, p1.y, p2.z)
+        
+        let p1ToP2Norm = normalize(p2 - p1)
+        let p1ToP2HorNorm = normalize(p2Hor - p1)
+        
+        let dotProduct = dot(p1ToP2Norm, p1ToP2HorNorm)
+        
+        let angle = acos(dotProduct)
+        
+        return angle
+    }
+}
+
+
+//MARK: Toggle UI / Manipulate UI position
+@available(iOS 16.0, *)
+extension VideARView {
+    
+    
+}
+
+//MARK: Helpers
+@available(iOS 16.0, *)
+extension VideARView {
+    
+    //adapted from - https://stackoverflow.com/questions/44944581/how-to-transform-vision-framework-coordinate-system-into-arkit
+    func convertFromCamera(_ point: CGPoint) -> CGPoint {
+        let orientation = UIApplication.shared.statusBarOrientation
+        
+        switch orientation {
+            case .portrait, .unknown:
+                return CGPoint(x: point.y * self.frame.width, y: point.x * self.frame.height)
+            case .landscapeLeft:
+                return CGPoint(x: (1 - point.x) * self.frame.width, y: point.y * self.frame.height)
+            case .landscapeRight:
+                return CGPoint(x: point.x * self.frame.width, y: (1 - point.y) * self.frame.height)
+            case .portraitUpsideDown:
+                return CGPoint(x: (1 - point.y) * self.frame.width, y: (1 - point.x) * self.frame.height)
+        }
+    }
+}
+
+extension Double {
+    func normalize(from input: ClosedRange<Self>, to output: ClosedRange<Self>) -> Self {
+        let x = (output.upperBound - output.lowerBound) * (self - input.lowerBound)
+        let y = (input.upperBound - input.lowerBound)
+        return x / y + output.lowerBound
+    }
+    func normalizeExponentially(from input: ClosedRange<Self>, to output: ClosedRange<Self>) -> Double {
+        // Define the original range based on the current value
+        let originalMin = input.lowerBound
+        let originalMax = input.upperBound
+        
+        // Calculate the scaling factor
+        let scaleFactor = (output.upperBound - output.lowerBound) / (originalMax - originalMin)
+        
+        // Linearly transform the value
+        let linearTransformedValue = (self - originalMin) * scaleFactor + output.lowerBound
+        
+        // Apply exponential transformation
+        let exponentiatedValue = pow(linearTransformedValue, 0.5)
+        
+        return exponentiatedValue
+    }
+}
+
+
+
+class PointerFingerEntity: Entity, HasAnchoring, HasCollision {
+    
+    var collisionSubs: [Cancellable] = []
+    
+    required init(color: UIColor) {
+        super.init()
+        
+        self.components[CollisionComponent.self] = CollisionComponent(
+            shapes: [.generateBox(size: [0.025,0.025,0.025])],
+            mode: .default,
+            filter: .sensor
+        )
+        
+        self.components[ModelComponent.self] = ModelComponent(
+            mesh: .generateSphere(radius: 0.005),
+            materials: [UnlitMaterial(
+                color: color)
+            ]
+        )
+    }
+    
+    convenience init(color: UIColor, position: SIMD3<Float>) {
+        self.init(color: color)
+        self.position = position
+    }
+    
+    required init() {
+        fatalError("init() has not been implemented")
+    }
+}
 
