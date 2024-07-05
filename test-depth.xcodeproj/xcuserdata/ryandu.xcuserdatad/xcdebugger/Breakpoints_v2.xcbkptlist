@@ -14,8 +14,8 @@
             filePath = "test-depth/VideARView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
             landmarkName = "processDetections(for:error:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -30,8 +30,8 @@
             filePath = "test-depth/VideARView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
+            startingLineNumber = "82"
+            endingLineNumber = "82"
             landmarkName = "processDetections(for:error:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -46,26 +46,58 @@
             filePath = "test-depth/VideARView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "246"
-            endingLineNumber = "246"
-            landmarkName = "session(_:didUpdate:)"
-            landmarkType = "7">
+            startingLineNumber = "252"
+            endingLineNumber = "252"
+            landmarkName = "eulerAngles"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "32BAE3CE-24A6-4BDC-BEFC-D8749582440D"
-            shouldBeEnabled = "Yes"
+            uuid = "9E52D803-CD9F-4160-83AA-9650C1062C79"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "test-depth/VideARView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
-            landmarkName = "processDetections(for:error:)"
-            landmarkType = "7">
+            startingLineNumber = "263"
+            endingLineNumber = "263"
+            landmarkName = "diffInRads(_:_:)"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  uuid = "9E52D803-CD9F-4160-83AA-9650C1062C79 - 60e10fcfed8d1568"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "test_depth.diffInRads(Swift.Float, Swift.Float) -&gt; Swift.Float"
+                  moduleName = "test-depth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ryandu/Desktop/coding_projects/Apps/test-depth/test-depth/VideARView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "260"
+                  endingLineNumber = "260"
+                  offsetFromSymbolStart = "76">
+               </Location>
+               <Location
+                  uuid = "9E52D803-CD9F-4160-83AA-9650C1062C79 - 60e10fcfed8d1568"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "test_depth.diffInRads(Swift.Float, Swift.Float) -&gt; Swift.Float"
+                  moduleName = "test-depth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ryandu/Desktop/coding_projects/Apps/test-depth/test-depth/VideARView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "260"
+                  endingLineNumber = "260"
+                  offsetFromSymbolStart = "104">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
