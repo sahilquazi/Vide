@@ -149,35 +149,38 @@ class SpeechRecognizer: ObservableObject {
     
     func speak(_ words: String) {
         
-        let audioSession = AVAudioSession() // 2) handle audio session first, before trying to read the text
-        
-        
-        do {
-            try audioSession.setCategory(.playback, mode: .default, options: .duckOthers)
-            try audioSession.setActive(false)
-        } catch let error {
-            print("❓", error.localizedDescription)
-        }
-        
-        speechSynthesizer = AVSpeechSynthesizer()
-        
-        let speechUtterance = AVSpeechUtterance(string: words)
-        //        speechUtterance.prefersAssistiveTechnologySettings = true
-        for voice in AVSpeechSynthesisVoice.speechVoices()
-        {
-            if voice.language == "en-US" {
-                
-                if voice.name == "Evan (Enhanced)" {
-                    print("FOUND VOICE")
-                    speechUtterance.voice = voice
+        if UserDefaults.standard.bool(forKey: "audioOn") {
+            
+            let audioSession = AVAudioSession() // 2) handle audio session first, before trying to read the text
+            
+            
+            do {
+                try audioSession.setCategory(.playback, mode: .default, options: .duckOthers)
+                try audioSession.setActive(false)
+            } catch let error {
+                print("❓", error.localizedDescription)
+            }
+            
+            speechSynthesizer = AVSpeechSynthesizer()
+            
+            let speechUtterance = AVSpeechUtterance(string: words)
+            //        speechUtterance.prefersAssistiveTechnologySettings = true
+            for voice in AVSpeechSynthesisVoice.speechVoices()
+            {
+                if voice.language == "en-US" {
+                    
+                    if voice.name == "Evan (Enhanced)" {
+                        print("FOUND VOICE")
+                        speechUtterance.voice = voice
+                    }
                 }
+                
+                
             }
             
             
+            speechSynthesizer?.speak(speechUtterance)
         }
-        
-        
-        speechSynthesizer?.speak(speechUtterance)
     }
     
     /// Stop transcribing audio.

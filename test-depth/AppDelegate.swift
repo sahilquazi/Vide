@@ -17,6 +17,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         // Create the SwiftUI view that provides the window contents.
+        if UserDefaults.standard.bool(forKey: "HasLaunchedBefore") == false {
+            // Perform your actions here
+            UserDefaults.standard.set(true, forKey: "audioOn")
+            
+            // Set the flag indicating the app has launched before
+            UserDefaults.standard.set(true, forKey: "HasLaunchedBefore")
+            UserDefaults.standard.synchronize()
+        }
+        
+        
+        
         let contentView = ContentView()
 
         // Use a UIHostingController as window root view controller.

@@ -20,6 +20,19 @@ class VideARView: ARView, ARSessionDelegate {
         super.init(frame: frameRect)
     }
     
+    func sessionWasInterrupted(_ session: ARSession) {
+        try? hapticsManager.continuousPlayer?.stop(atTime: CHHapticTimeImmediate)
+        self.session.pause()
+        print("SESSION WAS INTERRUPTED")
+        
+    }
+    
+    func sessionInterruptionEnded(_ session: ARSession) {
+        try? hapticsManager.continuousPlayer?.start(atTime: CHHapticTimeImmediate)
+//        self.session.star
+        print("SESSION INTERRUPTED ENDED")
+    }
+    
     required dynamic init?(coder decoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -47,6 +60,8 @@ class VideARView: ARView, ARSessionDelegate {
     var currentCentralDistance: Float = 9999.9
     var speechRecognizer: SpeechRecognizer?
     
+    var objDetectionModeOn = false
+    
     lazy var objectDetectionRequest: VNCoreMLRequest = {
         do {
             let model = try VNCoreMLModel(for: YOLOv3_model().model)
@@ -58,6 +73,13 @@ class VideARView: ARView, ARSessionDelegate {
             fatalError("Failed to load Vision ML model.")
         }
     }()
+    
+    
+    func turnOffObjDetectionMode() {
+        self.objDetectionModeOn = false
+        textDisplayer?("")
+        
+    }
     
     func processDetections(for request: VNRequest, error: Error?) {
         guard error == nil else {
@@ -105,6 +127,7 @@ class VideARView: ARView, ARSessionDelegate {
                     objectDetectionAnchor = AnchorEntity()
                     objectDetectionAnchor?.move(to: result.worldTransform, relativeTo: nil)
                     textDisplayer?("Locked on and looking for object")
+                    self.speechRecognizer?.speak("In sight")
                     lookingForObject = nil
                 }
             }
@@ -116,10 +139,11 @@ class VideARView: ARView, ARSessionDelegate {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         frameCounter += 1
   
-        if let lookingForObjectU = lookingForObject {
+        
+        if objDetectionModeOn {
             runObjectDetection(session: session, frame: frame)
             self.hapticsManager.proximityWarningOn = false
-            try? self.hapticsManager.continuousPlayer?.stop(atTime: CHHapticTimeImmediate)
+//            try? self.hapticsManager.continuousPlayer?.stop(atTime: CHHapticTimeImmediate)
             print("being objective")
         } else {
             print("being passive")
@@ -196,6 +220,7 @@ class VideARView: ARView, ARSessionDelegate {
     public func setObjectDetectionTarget(target: String) {
         self.speechRecognizer?.speak("looking for \(target)")
         self.lookingForObject = target
+        self.objDetectionModeOn = true
         
     }
     
